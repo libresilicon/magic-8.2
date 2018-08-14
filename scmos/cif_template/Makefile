@@ -6,6 +6,7 @@ CIFIN	   = $(OBJS_DIR)/CIFin
 CIFOUT     = $(OBJS_DIR)/CIFout
 IBMCIFIN   = $(OBJS_DIR)/IBMCIFin
 IBMCIFOUT  = $(OBJS_DIR)/IBMCIFout
+LSACIFOUT  = $(OBJS_DIR)/LSACIFout
 TMCIFIN    = $(OBJS_DIR)/TMCIFin
 TMCIFOUT   = $(OBJS_DIR)/TMCIFout
 SUBCIFIN   = $(OBJS_DIR)/SUBCIFin
@@ -18,11 +19,12 @@ include ${MAGICDIR}/defs.mak
 SC_CPP	   = ${CPP}
 
 all: $(OBJS_DIR) $(CIFIN) $(CIFOUT) $(IBMCIFIN) $(IBMCIFOUT) $(TMCIFIN) \
+	$(LSACIFOUT)\
 	$(TMCIFOUT) $(SUBCIFIN) $(SUBCIFOUT)
 
 clean:;
 	rm -f $(CIFIN) $(CIFOUT) $(IBMCIFIN) $(IBMCIFOUT) $(TMCIFIN) \
-	$(TMCIFOUT) $(SUBCIFIN) $(SUBCIFOUT)
+	$(TMCIFOUT) $(SUBCIFIN) $(SUBCIFOUT) $(LSACIFOUT)
 
 scg: cifout.c cifout-cmos26b.gen cifout.gen cifout.nw\
 	   cifout.others cifout.pw cifout.scgnw cifout.scgpw
@@ -35,12 +37,12 @@ $(OBJS_DIR):
 $(CIFIN): cifin.c cifin-cmos26b.gen cifin.gen cifin.nw cifin.oldnw\
 	  cifin.others cifin.pw cifin-ami16.gen
 	rm -f $(CIFIN)
-	$(SC_CPP) -DSTANDARD cifin.c | ${SED_CMD} > $(CIFIN)
+	$(SC_CPP) -DLSA -DSTANDARD cifin.c | ${SED_CMD} > $(CIFIN)
 
 $(CIFOUT): cifout.c cifout-cmos26b.gen cifout.gen cifout.nw\
 	   cifout.others cifout.pw cifout-ami16.gen
 	rm -f $(CIFOUT)
-	$(SC_CPP) -DSTANDARD cifout.c | ${SED_CMD} > $(CIFOUT)
+	$(SC_CPP) -DLSA -DSTANDARD cifout.c | ${SED_CMD} > $(CIFOUT)
 
 $(IBMCIFIN): cifin.c cifin-ibm.gen
 	rm -f $(IBMCIFIN)
@@ -49,6 +51,11 @@ $(IBMCIFIN): cifin.c cifin-ibm.gen
 $(IBMCIFOUT): cifout.c cifout-ibm.gen
 	rm -f $(IBMCIFOUT)
 	$(SC_CPP) -DIBM cifout.c | ${SED_CMD} > $(IBMCIFOUT)
+
+# Libre Silicon
+$(LSACIFOUT): cifout.c cifout-libresilicon.gen
+	rm -f $(LSACIFOUT)
+	$(SC_CPP) -DLSA cifout.c | ${SED_CMD} > $(LSACIFOUT)
 
 $(TMCIFIN): cifin.c cifin-cmos26b.gen
 	rm -f $(TMCIFIN)

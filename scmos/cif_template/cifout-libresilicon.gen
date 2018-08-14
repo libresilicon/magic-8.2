@@ -1,0 +1,116 @@
+
+style lambda=1.0(libresilicon)
+	scalefactor lambda_1 scaleunit
+
+	layer wells nwell,pwell
+
+	layer wells_sti wells
+		shrink lambda_1
+
+	layer poly_parts
+		or polysilicon
+		or polycontact
+		or nfet
+		or pfet
+
+	layer nimplant
+		or ndiff
+		or nfet
+		or ndc
+		or nnd
+
+	layer pimplant
+		or pdiff
+		or pfet
+		or pdc
+		or ppd
+
+	layer contacts
+		or polycontact
+		or pdc
+		or ndc
+		or ppc
+		or nnc
+
+	layer first_metal
+		or m1
+		or pc
+		or pdc
+		or ndc
+		or ppc
+		or nnc
+		or m2c
+		or pad
+
+	layer first_via
+		or m2c
+		or pad
+
+	layer second_metal
+		or m2
+		or m2c
+		or pad
+
+	layer second_via
+		or m3c
+		or pad
+
+	layer third_metal
+		or m3
+		or m3c
+		or pad
+
+	layer selects nimplant,pimplant
+
+	layer select_fox selects
+		grow lambda_1
+
+	layer CWP pwell
+		calma 2 1
+
+	layer CWN nwell
+		calma 3 1
+
+	layer STI wells_sti
+		calma 4 1
+
+	layer FOX select_fox
+		calma 5 1
+
+	layer CPG poly_parts
+		calma 6 1
+
+	layer CSN nimplant
+		calma 7 1
+
+	layer CSP pimplant
+		calma 8 1
+
+	layer CCA contacts
+		calma 10 1
+
+	layer CMF first_metal
+		calma 11 1
+
+	layer CVA first_via
+		calma 12 1
+
+	layer CMS second_metal
+		calma 13 1
+
+	layer CVS second_via
+		calma 14 1
+
+	layer CMT third_metal
+		calma 15 1
+
+	/*
+	layer CG
+		labels space
+		labels psubstratepcontact
+		labels metal2
+		calma 16 1
+	*/
+
+#undef cif_tech
+
