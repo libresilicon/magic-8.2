@@ -1,4 +1,4 @@
-#!/usr/local/bin/tclsh
+#!/usr/bin/tclsh
 #
 # Strip GDS cell references from magic files.
 #
