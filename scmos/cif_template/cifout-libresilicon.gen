@@ -2,11 +2,6 @@
 style lambda=1.0(libresilicon)
 	scalefactor lambda_1 scaleunit
 
-	layer wells nwell,pwell
-
-	layer wells_sti wells
-		shrink lambda_1
-
 	layer poly_parts
 		or polysilicon
 		or polycontact
@@ -66,43 +61,46 @@ style lambda=1.0(libresilicon)
 		grow lambda_1
 
 	layer CWP pwell
-		calma 2 1
+		calma 2 0
 
 	layer CWN nwell
-		calma 3 1
+		calma 3 0
+
+	templayer wells_sti nwell,pwell
+		shrink lambda_1
 
 	layer STI wells_sti
-		calma 4 1
+		calma 4 0
 
 	layer FOX select_fox
-		calma 5 1
+		calma 5 0
 
 	layer CPG poly_parts
-		calma 6 1
+		calma 6 0
 
 	layer CSN nimplant
-		calma 7 1
+		calma 7 0
 
 	layer CSP pimplant
-		calma 8 1
+		calma 8 0
 
 	layer CCA contacts
-		calma 10 1
+		calma 10 0
 
 	layer CMF first_metal
-		calma 11 1
+		calma 11 0
 
 	layer CVA first_via
-		calma 12 1
+		calma 12 0
 
 	layer CMS second_metal
-		calma 13 1
+		calma 13 0
 
 	layer CVS second_via
-		calma 14 1
+		calma 14 0
 
 	layer CMT third_metal
-		calma 15 1
+		calma 15 0
 
 	/*
 	layer CG
