@@ -435,6 +435,7 @@ types
 
     /* Contacts between interconnection layers -13 */
 
+    active      rpoly,rp,resistor,res
     active	polycontact,pcontact,polycut,pc
     active	ndcontact,ndiffcut,ndc
     active	pdcontact,pdiffcut,pdc
@@ -668,6 +669,8 @@ styles
     error_p	42
     error_s	42
     error_ps	42
+
+    res         poly_resist poly_resist_stripes
 end
 
 compose
