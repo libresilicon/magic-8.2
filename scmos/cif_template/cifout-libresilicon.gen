@@ -1,12 +1,13 @@
 
 style lambda=1.0(libresilicon)
-	scalefactor lambda_1 scaleunit
+	scalefactor scaleunit scaleunit
 
 	layer poly_parts
 		or polysilicon
 		or polycontact
 		or nfet
 		or pfet
+		or rpoly
 
 	layer nimplant
 		or ndiff
@@ -28,7 +29,7 @@ style lambda=1.0(libresilicon)
 		or nnc
 
 	templayer pad_squares pad
-		squares 1000 1000 1000
+		squares 250 250 250
 
 	layer first_metal
 		or m1
@@ -47,6 +48,7 @@ style lambda=1.0(libresilicon)
 	layer second_metal
 		or m2
 		or m2c
+		or m3c
 		or pad
 
 	layer second_via
@@ -58,10 +60,9 @@ style lambda=1.0(libresilicon)
 		or m3c
 		or pad
 
-	layer selects nimplant,pimplant
-
-	layer select_fox selects
-		grow lambda_1
+	templayer fox_selects nimplant,pimplant
+	templayer sti_wells nwell,pwell
+		shrink 50
 
 	layer CWP pwell
 		calma 2 0
@@ -69,27 +70,25 @@ style lambda=1.0(libresilicon)
 	layer CWN nwell
 		calma 3 0
 
-	templayer wells_sti nwell,pwell
-		shrink lambda_1
-
-	layer STI wells_sti
+	layer STI sti_wells
 		calma 4 0
 
-	layer FOX select_fox
+	layer FOX fox_selects
 		calma 5 0
 
 	layer CPG poly_parts
 		calma 6 0
 
 	layer CSN nimplant
+		grow lambda_1
 		calma 7 0
 
 	layer CSP pimplant
+		grow lambda_1
 		calma 8 0
 
-	layer CRG
-		bloat-all rp poly,pc
-		grow lambda_1
+	layer CRG rpoly
+		grow lambda_5
 		calma 9 0
 
 	layer CCA contacts
