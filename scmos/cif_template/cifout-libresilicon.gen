@@ -14,12 +14,14 @@ style lambda=1.0(libresilicon)
 		or nfet
 		or ndc
 		or nnd
+		or nnc
 
 	layer pimplant
 		or pdiff
 		or pfet
 		or pdc
 		or ppd
+		or ppc
 
 	layer contacts
 		or polycontact
@@ -80,11 +82,11 @@ style lambda=1.0(libresilicon)
 		calma 6 0
 
 	layer CSN nimplant
-		grow lambda_1
+		grow 50 
 		calma 7 0
 
 	layer CSP pimplant
-		grow lambda_1
+		grow 50
 		calma 8 0
 
 	layer CRG rpoly
