@@ -111,6 +111,9 @@ style lambda=1.0(libresilicon)
 	layer CMT third_metal
 		calma 15 0
 
+	layer COG glass
+		calma 16 0
+
 	/*
 	layer CG
 		labels space
