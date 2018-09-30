@@ -348,7 +348,6 @@
 #define allHVNwell hnwell,hnsc,hnsd
 #define allHVPwell hpwell,hpsc,hpsd
 
-
 tech
     format 28
     scmos
@@ -376,7 +375,6 @@ version
 #endif /* TIGHTMETAL */
 end
 #endif /* V4 */
-
 planes
     well,w
     implant,i
@@ -390,7 +388,6 @@ planes
     oxide,ox
 end
 
-
 types
     /* primary layers -16 */
 
@@ -478,11 +475,11 @@ types
     oxide	pdiffusionstop,pdiffstop,pstop
 
     /* Additional stuff, used in pads. -2 */
- 
-    metal2	pad
+    metal3      pad
     oxide	glass
+    metal3      silk
 end
-
+
 contact
     /* polys */
     ec		poly2	metal1
@@ -515,7 +512,7 @@ contact
  */
 
 end
-
+
 styles
     styletype	mos
 
@@ -669,10 +666,9 @@ styles
     error_p	42
     error_s	42
     error_ps	42
-
     res         poly_resist poly_resist_stripes
+    silk        47
 end
-
 compose
     /* MOSFET combination rules */
     compose	nfet	poly	hndiff
