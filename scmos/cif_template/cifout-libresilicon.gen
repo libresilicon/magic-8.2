@@ -22,6 +22,7 @@ style lambda=1.0(libresilicon)
 		or pdc
 		or ppd
 		or ppc
+		or pbc
 
 	layer contacts
 		or polycontact
@@ -29,6 +30,7 @@ style lambda=1.0(libresilicon)
 		or ndc
 		or ppc
 		or nnc
+		or pbc
 
 	templayer pad_squares pad
 		squares 250 250 250
@@ -42,6 +44,7 @@ style lambda=1.0(libresilicon)
 		or nnc
 		or m2c
 		or pad
+		or pbc
 
 	layer first_via
 		or m2c
@@ -62,11 +65,12 @@ style lambda=1.0(libresilicon)
 		or m3c
 		or pad
 
+	templayer bicmos_pwell pbase,pbasecontact
 	templayer fox_selects nimplant,pimplant
 	templayer sti_wells nwell,pwell
 		shrink 50
 
-	layer CWP pwell
+	layer CWP pwell,bicmos_pwell
 		calma 2 0
 
 	layer CWN nwell
