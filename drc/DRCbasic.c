@@ -546,7 +546,9 @@ drcTile (tile, arg)
 		    Rect *lr;
 		    int i;
 
-		    if (!trigpending) cptr->drcc_dist++;
+		    if (!trigpending || (DRCCurStyle->DRCFlags
+				& DRC_FLAGS_WIDEWIDTH_NONINCLUSIVE))
+			cptr->drcc_dist++;
 
 		    if (cptr->drcc_flags & DRC_REVERSE)
 			mrd = drcCanonicalMaxwidth(tpleft, GEO_WEST, arg, cptr);
@@ -554,11 +556,34 @@ drcTile (tile, arg)
 			mrd = drcCanonicalMaxwidth(tile, GEO_EAST, arg, cptr);
 		    else
 			mrd = NULL;
-		    if (!trigpending) cptr->drcc_dist--;
+		    if (!trigpending || (DRCCurStyle->DRCFlags
+				& DRC_FLAGS_WIDEWIDTH_NONINCLUSIVE))
+			cptr->drcc_dist--;
 		    if (trigpending)
 		    {
 			if (mrd)
-			    triggered = mrd->entries;
+			{
+			    if (cptr->drcc_cdist <= cptr->drcc_dist)
+				triggered = mrd->entries;
+		            else if ((edgeTop - edgeBot) >= cptr->drcc_cdist)
+			    {
+				/* Run-length rule */
+				for (i = 0; i < mrd->entries; i++)
+				{
+				    lr = &mrd->rlist[i];
+				    GeoClip(lr, arg->dCD_clip);
+				    if ((lr->r_ytop - lr->r_ybot) > cptr->drcc_cdist)
+				    {
+					triggered = mrd->entries;
+					break;
+				    }
+				}
+				if (i == mrd->entries)
+				    cptr = cptr->drcc_next;
+			    }
+			    else
+				cptr = cptr->drcc_next;
+			}
 			else
 			    cptr = cptr->drcc_next;
 		    }
@@ -903,7 +928,9 @@ checkbottom:
 		    Rect *lr;
 		    int i;
 
-		    if (!trigpending) cptr->drcc_dist++;
+		    if (!trigpending || (DRCCurStyle->DRCFlags
+				& DRC_FLAGS_WIDEWIDTH_NONINCLUSIVE))
+			cptr->drcc_dist++;
 
 		    if (cptr->drcc_flags & DRC_REVERSE)
 			mrd = drcCanonicalMaxwidth(tpbot, GEO_SOUTH, arg, cptr);
@@ -911,11 +938,34 @@ checkbottom:
 			mrd = drcCanonicalMaxwidth(tile, GEO_NORTH, arg, cptr);
 		    else
 			mrd = NULL;
-		    if (!trigpending) cptr->drcc_dist--;
+		    if (!trigpending || (DRCCurStyle->DRCFlags
+				& DRC_FLAGS_WIDEWIDTH_NONINCLUSIVE))
+			cptr->drcc_dist--;
 		    if (trigpending)
 		    {
 			if (mrd)
-			    triggered = mrd->entries;
+			{
+			    if (cptr->drcc_cdist <= cptr->drcc_dist)
+				triggered = mrd->entries;
+		            else if ((edgeRight - edgeLeft) >= cptr->drcc_cdist)
+			    {
+				/* Run-length rule */
+				for (i = 0; i < mrd->entries; i++)
+				{
+				    lr = &mrd->rlist[i];
+				    GeoClip(lr, arg->dCD_clip);
+				    if ((lr->r_xtop - lr->r_xbot) > cptr->drcc_cdist)
+				    {
+					triggered = mrd->entries;
+					break;
+				    }
+				}
+				if (i == mrd->entries)
+				    cptr = cptr->drcc_next;
+			    }
+			    else
+				cptr = cptr->drcc_next;
+			}
 			else
 			    cptr = cptr->drcc_next;
 		    }

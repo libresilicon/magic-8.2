@@ -881,11 +881,40 @@ calmaOutFunc(def, f, cliprect)
 		(ClientData) &cos);
     }
 
-    /* Output labels */
+    /* Output labels.  Do this in two passes, first for non-port labels	*/
+    /* while finding the highest-numbered port.  Then output the port	*/
+    /* labels (if any) in the order of the port index.			*/
+
     if (CalmaDoLabels)
+    {
+	int i, maxport = -1;
+
 	for (lab = def->cd_labels; lab; lab = lab->lab_next)
-	    calmaWriteLabelFunc(lab,
-			    CIFCurStyle->cs_labelLayer[lab->lab_type], f);
+	{
+	    type = CIFCurStyle->cs_labelLayer[lab->lab_type];
+	    if ((type >= 0) && (lab->lab_flags & PORT_DIR_MASK) == 0)
+	    {
+		calmaWriteLabelFunc(lab, type, f);
+	    }
+	    else
+	    {
+		if ((int)(lab->lab_flags & PORT_NUM_MASK) > maxport)
+		    maxport = (int)(lab->lab_flags & PORT_NUM_MASK);
+	    }
+	}
+	if (maxport >= 0)
+	    for (i = 0; i <= maxport; i++)
+		for (lab = def->cd_labels; lab; lab = lab->lab_next)
+		{
+		    type = CIFCurStyle->cs_portLayer[lab->lab_type];
+		    if ((type >= 0) && ((lab->lab_flags & PORT_DIR_MASK) != 0) &&
+				((lab->lab_flags & PORT_NUM_MASK) == i))
+		    {
+			calmaWriteLabelFunc(lab, type, f);
+			break;	
+		    }
+		}
+    }
 
     /* End of structure */
     calmaOutRH(4, CALMA_ENDSTR, CALMA_NODATA, f);
@@ -2345,7 +2374,7 @@ calmaWriteLabelFunc(lab, type, f)
     FILE *f;	/* Stream file */
 {
     Point p;
-    int calmanum;
+    int calmanum, calmatype;
 
     if (type < 0)
 	return;
@@ -2359,8 +2388,9 @@ calmaWriteLabelFunc(lab, type, f)
     calmaOutRH(6, CALMA_LAYER, CALMA_I2, f);
     calmaOutI2(calmanum, f);
 
+    calmatype = CIFCurStyle->cs_layers[type]->cl_calmatype;
     calmaOutRH(6, CALMA_TEXTTYPE, CALMA_I2, f);
-    calmaOutI2(CIFCurStyle->cs_layers[type]->cl_calmatype, f);
+    calmaOutI2(calmatype, f);
 
     if (lab->lab_font >= 0)
     {
@@ -2435,6 +2465,48 @@ calmaWriteLabelFunc(lab, type, f)
 
     /* End of element */
     calmaOutRH(4, CALMA_ENDEL, CALMA_NODATA, f);
+
+    /* If the cifoutput layer is for labels only (has no operators),	*/
+    /* and the label rectangle is not degenerate, then output the label	*/
+    /* rectangle as a boundary with the label's layer:purpose pair.	*/
+
+    /* Note that the check for whether the CIF_LABEL_NOPORT flag has	*/
+    /* been set is done outside of this routine.			*/
+
+    if ((CIFCurStyle->cs_layers[type]->cl_ops == NULL) &&
+		(lab->lab_rect.r_xtop > lab->lab_rect.r_xbot) &&
+		(lab->lab_rect.r_ytop > lab->lab_rect.r_ybot))
+    {
+	Rect r;
+
+	r = lab->lab_rect;
+	r.r_xbot *= calmaWriteScale;
+	r.r_ybot *= calmaWriteScale;
+	r.r_xtop *= calmaWriteScale;
+	r.r_ytop *= calmaWriteScale;
+
+	/* Boundary */
+	calmaOutRH(4, CALMA_BOUNDARY, CALMA_NODATA, f);
+
+	/* Layer */
+	calmaOutRH(6, CALMA_LAYER, CALMA_I2, f);
+	calmaOutI2(calmanum, f);
+
+	/* Data type */
+	calmaOutRH(6, CALMA_DATATYPE, CALMA_I2, f);
+	calmaOutI2(calmatype, f);
+
+	/* Coordinates */
+	calmaOutRH(44, CALMA_XY, CALMA_I4, f);
+	calmaOutI4(r.r_xbot, f); calmaOutI4(r.r_ybot, f);
+	calmaOutI4(r.r_xtop, f); calmaOutI4(r.r_ybot, f);
+	calmaOutI4(r.r_xtop, f); calmaOutI4(r.r_ytop, f);
+	calmaOutI4(r.r_xbot, f); calmaOutI4(r.r_ytop, f);
+	calmaOutI4(r.r_xbot, f); calmaOutI4(r.r_ybot, f);
+
+	/* End of element */
+	calmaOutRH(4, CALMA_ENDEL, CALMA_NODATA, f);
+    }
 }
 
 /*
