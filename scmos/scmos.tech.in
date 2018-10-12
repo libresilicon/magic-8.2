@@ -410,6 +410,7 @@ types
 
     /* MOSFETs -8 */
 
+    active	sonostransistor,sfet
     active	ntransistor,nfet
     active	ptransistor,pfet
     active	entransistor,enfet
@@ -431,7 +432,8 @@ types
     active	nbccdiffusion,nbd
 
     /* Contacts between interconnection layers -13 */
-
+    active      rndiffusion,rndiff,rnd
+    active      rpdiffusion,rpdiff,rpd
     active      rpoly,rp,resistor,res
     active	polycontact,pcontact,polycut,pc
     active	ndcontact,ndiffcut,ndc
@@ -478,6 +480,10 @@ types
     metal3      pad
     oxide	glass
     metal3      silk
+
+    active	ndiode,npol
+    active	pdiode,ppol
+
 end
 
 contact
@@ -543,6 +549,7 @@ styles
     pdop	4
     pdop	38
     /* transistors */
+    sfet	6
     nfet	6
     nfet	7
     pfet	8
@@ -667,6 +674,10 @@ styles
     error_s	42
     error_ps	42
     res         poly_resist poly_resist_stripes
+    rnd         ndiffusion  poly_resist_stripes
+    rpd         pdiffusion  nwell_field_implant
+    ppol        polysilicon  ptransistor_stripes
+    npol        polysilicon  ntransistor_stripes
     silk        47
 end
 compose
