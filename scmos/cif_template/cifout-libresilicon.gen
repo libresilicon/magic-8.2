@@ -1,122 +1,91 @@
 
-style lambda=1.0(libresilicon)
+style lambda=0.5(libresilicon)
 	scalefactor scaleunit scaleunit
 
-	layer poly_parts
-		or polysilicon
-		or polycontact
-		or nfet
-		or pfet
-		or rpoly
+	templayer poly_parts polysilicon,polycontact,nfet,pfet,rpoly,polypdiff,polyndiff,ndpolycontact,pdpolycontact,rpdiffusion,rndiffusion,nbsfet,pbsfet,spfet,snfet,pbpoly,nbpoly
+	templayer rpoly_parts rpoly,rpdiffusion,rndiffusion
+	templayer nimplant ndiff,nfet,ndc,nnd,nnc,pbnc,pbnd,nbnc,nbnd,snfet,pbsfet
+	templayer nimplant_only rnd,plndiff,ndpc
+	templayer pimplant pdiff,pfet,pdc,ppd,ppc,pbpc,pbpd,nbpc,nbpd,spfet,nbsfet
+	templayer pimplant_only rpd,plpdiff,pdpc
+	templayer contacts pc,pdc,ndc,ppc,nnc,pbc,ndpc,pdpc,pbnc,pbpc,nbnc,nbpc
+	templayer first_metal m1,pc,pdc,ndc,ppc,nnc,m2c,pbc
+	templayer first_via m2c
+	templayer second_metal m2,m2c,m3c
+	templayer second_via m3c
+	templayer third_metal m3,m3c,pad
+	templayer pbase_parts pb,pbnc,pbpc,pbnd,pbpd,pbpoly,pbsfet,nwpnbase,nwpbase,pnbase,pbase
+	templayer nbase_parts nb,nbnc,nbpc,nbnd,nbpd,nbpoly,nbsfet,nwpnbase,pnbase,nbase
+	templayer sonos_parts snfet,spfet,nbsfet,pbsfet
+	templayer nwell_parts nwell,pnbase,nwpnbase,nwpbase
+	templayer pwell_parts pwell
 
-	layer nimplant
-		or ndiff
-		or nfet
-		or ndc
-		or nnd
-		or nnc
+	templayer fox_nimplant nimplant
+		grow lambda_1 
 
-	layer pimplant
-		or pdiff
-		or pfet
-		or pdc
-		or ppd
-		or ppc
-		or pbc
+	templayer fox_pimplant pimplant
+		grow lambda_1
 
-	layer contacts
-		or polycontact
-		or pdc
-		or ndc
-		or ppc
-		or nnc
-		or pbc
-
-	templayer pad_squares pad
-		squares 250 250 250
-
-	layer first_metal
-		or m1
-		or pc
-		or pdc
-		or ndc
-		or ppc
-		or nnc
-		or m2c
-		or pad
-		or pbc
-
-	layer first_via
-		or m2c
-		or pad_squares 
-
-	layer second_metal
-		or m2
-		or m2c
-		or m3c
-		or pad
-
-	layer second_via
-		or m3c
-		or pad_squares 
-
-	layer third_metal
-		or m3
-		or m3c
-		or pad
-
-	templayer bicmos_pwell pbase,pbasecontact
 	templayer fox_selects nimplant,pimplant
-	templayer sti_wells nwell,pwell
-		shrink 50
 
-	layer CWP pwell,bicmos_pwell
+	templayer sti_wells nwell_parts,pwell_parts
+		shrink lambda_1
+
+	layer CWN nwell_parts
 		calma 2 0
 
-	layer CWN nwell
+	layer CWP pwell_parts
 		calma 3 0
 
-	layer STI sti_wells
+	layer CWP pbase_parts
 		calma 4 0
 
-	layer FOX fox_selects
+	layer CWP nbase_parts
 		calma 5 0
 
-	layer CPG poly_parts
+	layer STI sti_wells
 		calma 6 0
 
-	layer CSN nimplant
-		grow 50 
+	layer FOX fox_selects
 		calma 7 0
 
-	layer CSP pimplant
-		grow 50
+	layer CPG sonos_parts
+		grow lambda_1
 		calma 8 0
 
-	layer CRG rpoly
-		grow lambda_5
+	layer CPG poly_parts
 		calma 9 0
 
-	layer CCA contacts
+	layer CSN fox_nimplant,nimplant_only
 		calma 10 0
 
-	layer CMF first_metal
+	layer CSP fox_pimplant,pimplant_only
 		calma 11 0
 
-	layer CVA first_via
+	layer CRG rpoly_parts
+		grow lambda_1
 		calma 12 0
 
-	layer CMS second_metal
+	layer CCA contacts
 		calma 13 0
 
-	layer CVS second_via
+	layer CMF first_metal
 		calma 14 0
 
-	layer CMT third_metal
+	layer CVA first_via
 		calma 15 0
 
-	layer COG glass
+	layer CMS second_metal
 		calma 16 0
+
+	layer CVS second_via
+		calma 17 0
+
+	layer CMT third_metal
+		calma 18 0
+
+	layer COG glass
+		calma 19 0
 
 	/*
 	layer CG
