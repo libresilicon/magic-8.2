@@ -26,7 +26,7 @@ FILES = mos.7bit.dstyle mos.7bit.std.cmap \
 	mos.7bit.mraster_dstyle mos.7bit.mraster.cmap \
 	mos.OpenGL.dstyle mos.OpenGL.std.cmap
 TECHFILES = minimum.tech gdsquery.tech scmos.tech scmos-tm.tech \
-	scmos-sub.tech scmosWR.tech
+	scmos-sub.tech scmosWR.tech libresilicon.tech
 
 CIFin   = cif_template/objs/CIFin
 CIFout  = cif_template/objs/CIFout
@@ -59,6 +59,11 @@ install-tcl: all
 install: all
 	for i in ${FILES} ${TECHFILES}; do \
 		${CP} $$i $(DESTDIR)${SYSDIR}; done
+
+libresilicon.tech: $(OBJS)
+	sed -e 's/\\/\\\\/' scmos.tech.in > scmos.tech.out
+	$(SC_CPP) -DV5 -DLIBRESILICON scmos.tech.out > libresilicon.tech 
+	$(RM) scmos.tech.out
 
 scmos.tech: $(OBJS)
 	sed -e 's/\\/\\\\/' scmos.tech.in > scmos.tech.out

@@ -2,34 +2,43 @@
 style lambda=0.5(libresilicon)
 	scalefactor scaleunit scaleunit
 
-	templayer poly_parts polysilicon,polycontact,nfet,pfet,rpoly,polypdiff,polyndiff,ndpolycontact,pdpolycontact,rpdiffusion,rndiffusion,nbsfet,pbsfet,spfet,snfet,pbpoly,nbpoly
-	templayer rpoly_parts rpoly,rpdiffusion,rndiffusion
-	templayer nimplant ndiff,nfet,ndc,nnd,nnc,pbnc,pbnd,nbnc,nbnd,snfet,pbsfet
+	templayer poly_parts polysilicon,polycontact,nfet,pfet,rpoly,polypdiff,polyndiff,ndpolycontact,pdpolycontact,rpdiffusion,rndiffusion,nbsfet,pbsfet,spfet,snfet,pbpoly,nbpoly,hnfet,hpfet
+	templayer silicide_stop rpoly,rpdiffusion,rndiffusion
+	templayer nimplant ndiff,nfet,ndc,nnd,nnc,pbnc,pbnd,nbnc,nbnd,snfet,pbsfet,hnfet,hndc,hndiff
 	templayer nimplant_only rnd,plndiff,ndpc
-	templayer pimplant pdiff,pfet,pdc,ppd,ppc,pbpc,pbpd,nbpc,nbpd,spfet,nbsfet
+		grow lambda_1
+	templayer pimplant pdiff,pfet,pdc,ppd,ppc,pbpc,pbpd,nbpc,nbpd,spfet,nbsfet,hpfet,hpdc,hpdiff
 	templayer pimplant_only rpd,plpdiff,pdpc
-	templayer contacts pc,pdc,ndc,ppc,nnc,pbc,ndpc,pdpc,pbnc,pbpc,nbnc,nbpc
-	templayer first_metal m1,pc,pdc,ndc,ppc,nnc,m2c,pbc
+		grow lambda_1
+	templayer contacts pc,pdc,ndc,ppc,nnc,pbc,ndpc,pdpc,pbnc,pbpc,nbnc,nbpc,hpdc,hndc,pc,pdc,ndc,ppc,nnc,pbc,hpdc,hndc
+	templayer first_metal m1,contacts,m2c
 	templayer first_via m2c
+		shrink lambda_half
 	templayer second_metal m2,m2c,m3c
 	templayer second_via m3c
-	templayer third_metal m3,m3c,pad
+		shrink lambda_half
+	templayer third_metal m3,m3c,pad,silk
 	templayer pbase_parts pb,pbnc,pbpc,pbnd,pbpd,pbpoly,pbsfet,nwpnbase,nwpbase,pnbase,pbase
 	templayer nbase_parts nb,nbnc,nbpc,nbnd,nbpd,nbpoly,nbsfet,nwpnbase,pnbase,nbase
 	templayer sonos_parts snfet,spfet,nbsfet,pbsfet
 	templayer nwell_parts nwell,pnbase,nwpnbase,nwpbase
 	templayer pwell_parts pwell
-
-	templayer fox_nimplant nimplant
-		grow lambda_1 
-
-	templayer fox_pimplant pimplant
+	templayer implant_stop_parts rpoly
 		grow lambda_1
 
 	templayer fox_selects nimplant,pimplant
 
+	templayer fox_nimplant nimplant
+		grow lambda_1
+
+	templayer fox_pimplant pimplant
+		grow lambda_1
+
 	templayer sti_wells nwell_parts,pwell_parts
-		shrink lambda_1
+		shrink lambda_half
+
+	templayer sti_contacts psc,nsc
+		grow lambda_half
 
 	layer CWN nwell_parts
 		calma 2 0
@@ -43,49 +52,53 @@ style lambda=0.5(libresilicon)
 	layer CWP nbase_parts
 		calma 5 0
 
-	layer STI sti_wells
+	layer STI sti_wells,sti_contacts
 		calma 6 0
 
 	layer FOX fox_selects
 		calma 7 0
 
 	layer CPG sonos_parts
-		grow lambda_1
+		grow lambda_half
 		calma 8 0
 
 	layer CPG poly_parts
 		calma 9 0
 
-	layer CSN fox_nimplant,nimplant_only
+	layer CPG implant_stop_parts
 		calma 10 0
 
-	layer CSP fox_pimplant,pimplant_only
+	layer CSN fox_nimplant,nimplant_only
 		calma 11 0
 
-	layer CRG rpoly_parts
-		grow lambda_1
+	layer CSP fox_pimplant,pimplant_only
 		calma 12 0
 
-	layer CCA contacts
+	layer CRG silicide_stop
+		grow lambda_1
 		calma 13 0
 
-	layer CMF first_metal
+	layer CCA contacts
+		shrink lambda_half
 		calma 14 0
 
-	layer CVA first_via
+	layer CMF first_metal
 		calma 15 0
 
-	layer CMS second_metal
+	layer CVA first_via
 		calma 16 0
 
-	layer CVS second_via
+	layer CMS second_metal
 		calma 17 0
 
-	layer CMT third_metal
+	layer CVS second_via
 		calma 18 0
 
-	layer COG glass
+	layer CMT third_metal
 		calma 19 0
+
+	layer COG glass
+		calma 20 0
 
 	/*
 	layer CG

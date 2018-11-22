@@ -292,9 +292,9 @@
 #define allPOhmic psd,psc/a
 #define allOhmic allNOhmic,allPOhmic
 #define allBiNDiff emit,emc/a,col,clc/a
-#define allBiPDiff pbase,pbc/a
+#define allBiPDiff pbase,nbase,pbc/a
 #define allBiDiff allBiNDiff,allBiPDiff
-#define allCCDiff bd,nbd,nbdc/a
+#define allCCDiff bd,nbd
 #define allDiff allNDiff,allPDiff
 #define allActive allNActive,allPActive,allOhmic
 #define PNplus ndiff,pdiff,ndc/a,pdc/a
@@ -307,7 +307,7 @@
 
 /* first poly without those overlapped with the second */
 #define allP poly,pc/a
-#define allP1 poly,pc/a,nfet,pfet,wcap
+#define allP1 poly,pc/a,nfet,pfet,wcap,snfet,spfet,pbpoly,nbpoly
 /* all first poly */
 #define allPoly allP1,cap,capc/a,nffet,pffet
 /* second poly without those overlapped with the first */
@@ -321,7 +321,7 @@
 #define allFet NFet,PFet
 
 /* Definitions for contacts */
-#define DiffCut pdc,ndc,psc,nsc
+#define DiffCut pdc,ndc,psc,nsc,pbnc,pbpc,nbnc,nbpc
 #define HVDiffCut hpdc,hndc,hpsc,hnsc
 #define PolyCut pc
 #define CapCut ec,capc
@@ -332,7 +332,7 @@
 #define DiffMetal pdc/m1,ndc/m1,psc/m1,nsc/m1
 #define HVDiffMetal hpdc/m1,hndc/m1,hpsc/m1,hnsc/m1
 #define PolyMetal pc/m1,ec/m1,capc/m1
-#define BiMetal clc/m1,emc/m1,pbc/m1
+#define BiMetal clc/m1,emc/m1
 #define CCDMetal nbdc/m1
 #define allMetal1 DiffMetal,HVDiffMetal,PolyMetal,BiMetal,CCDMetal,m1,m2c/m1,gc
 #define allMetal2 m2,m2c/m2,m3c/m2,pad
@@ -354,6 +354,11 @@ tech
 end
 
 #if V4 || V5
+#ifdef LIBRESILICON
+version
+    version 0.1	
+    description "LibreSilicon process (1um)"
+#else
 version
     version 8.2.8
 #ifdef SUBMICRON
@@ -373,6 +378,7 @@ version
 #endif /* HPTECH */
 #endif /* IBMTECH */
 #endif /* TIGHTMETAL */
+#endif /* LIBRESILICON */
 end
 #endif /* V4 */
 planes
@@ -385,6 +391,7 @@ planes
     v2oxide,v2x
 #endif
     metal3,m3
+    metal4,m4
     oxide,ox
 end
 
@@ -397,6 +404,8 @@ types
     well	highvoltnwell,hvnwell,hnwell,hnw
     well	highvoltpwell,hvpwell,hpwell,hpw
     active	polysilicon,red,poly,p
+    active	pbasepolysilicon,pbpoly,pbp
+    active	nbasepolysilicon,nbpoly,nbp
     active	electrode,poly2,el,p2
     active	capacitor,polycap,pcap,cap
     active	wellcapacitor,wellcap,wcap
@@ -407,10 +416,14 @@ types
     metal1	metal1,m1,blue
     metal2	metal2,m2,purple
     metal3	metal3,m3,cyan
+    metal4	metcap,mcap
 
     /* MOSFETs -8 */
 
-    active	sonostransistor,sfet
+    active	sonosntransistor,snfet
+    active	sonosptransistor,spfet
+    active	pbsonostransistor,pbsfet
+    active	nbsonostransistor,nbsfet
     active	ntransistor,nfet
     active	ptransistor,pfet
     active	entransistor,enfet
@@ -424,7 +437,25 @@ types
 
     active	collector,coll,col,co,cl
     active	emitter,emit,em
-    active	pbase,pb
+
+    /* stuff for BiCMOS */
+    well	pbase,pb
+    well	nbase,nb
+    well	pnbase,pnb
+    well	nwpbase,nwpb
+    well	nwpnbase,nwpnb
+
+    active	pbasecontact,pbcontact,pbc
+    active	pbasendiffusion,pbndiff,pbnd
+    active	pbasepdiffusion,pbpdiff,pbpd
+    active	pbasendiffcontact,pbndcontact,pbnc
+    active	pbasepdiffcontact,pbpdcontact,pbpc
+
+    active	nbasecontact,nbcontact,nbc
+    active	nbasendiffusion,nbndiff,nbnd
+    active	nbasepdiffusion,nbpdiff,nbpd
+    active	nbasendiffcontact,nbndcontact,nbnc
+    active	nbasepdiffcontact,nbpdcontact,nbpc
 
     /* layers for BCCD devices -2 */
 
@@ -436,6 +467,8 @@ types
     active      rpdiffusion,rpdiff,rpd
     active      rpoly,rp,resistor,res
     active	polycontact,pcontact,polycut,pc
+    active	pdpolycontact,pdpcontact,pdpolycut,pdpc
+    active	ndpolycontact,ndpcontact,ndpolycut,ndpc
     active	ndcontact,ndiffcut,ndc
     active	pdcontact,pdiffcut,pdc
     active	highvoltndcontact,hndiffcut,hndc
@@ -444,7 +477,6 @@ types
     active	electrodecontact,econtact,ec,poly2contact,p2c
     active	collectorcontact,colcontact,colc,coc,clc
     active	emittercontact,emitcontact,emc
-    active	pbasecontact,pbcontact,pbc
     active	nbccdiffcontact,nbdc
     metal1	m2contact,m2cut,m2c,via,v
 #ifdef STACKVIA
@@ -477,12 +509,12 @@ types
     oxide	pdiffusionstop,pdiffstop,pstop
 
     /* Additional stuff, used in pads. -2 */
-    metal3      pad
+    metal2      pad
     oxide	glass
     metal3      silk
 
-    active	ndiode,npol
-    active	pdiode,ppol
+    active	polyndiff,plndiff
+    active	polypdiff,plpdiff
 
 end
 
@@ -503,7 +535,12 @@ contact
     /* bipolar contacts */
     clc		col	metal1
     emc		emit	metal1
-    pbc		pbase	metal1
+
+    /*pbnc	pbase	metal1
+    pbpc	pbase	metal1
+    nbnc	nbase	metal1
+    nbpc	nbase	metal1*/
+
     /* BCCD contact */
     nbdc	nbd	metal1
     /* vias */
@@ -549,7 +586,10 @@ styles
     pdop	4
     pdop	38
     /* transistors */
-    sfet	6
+    snfet	6
+    spfet	6
+    nbsfet	6
+    pbsfet	6
     nfet	6
     nfet	7
     pfet	8
@@ -578,11 +618,36 @@ styles
     hpfet	8
     hpfet	9
     hpfet	31
-    /* base */
-    pbase	15
+
+    /* pbase */
+    pbase	pdop_stripes
     pbc		15
     pbc		20
     pbc		32
+    pbnd        2
+    pbpd        4
+    pbnc        2
+    pbpc        4
+    pbnc        32
+    pbpc        32
+
+    /* nbase */
+    nbase	ndop_stripes
+    nbc		20
+    nbc		32
+    nbnd        2
+    nbpd        4
+    nbnc        2
+    nbpc        4
+    nbnc        32
+    nbpc        32
+
+    /* pnbase (pbase and nbase overlappint) */
+    pnbase	ndop_stripes
+    nwpnbase	ndop_stripes
+    /* pbase on nwell */
+    nwpbase	pdop_stripes
+
     /* emitter */
     emit	16
     emc		16
@@ -606,6 +671,7 @@ styles
     metal1	20
     metal2	21
     metal3	22
+    metcap	23
     /* generic contact */
     gc		19
     /* poly contacts */
@@ -615,6 +681,8 @@ styles
     ec   	20
     ec   	32
     /* diffusion contacts */
+    ndpc	32
+    pdpc	32
     ndc		2
     ndc		20
     ndc		32
@@ -674,10 +742,12 @@ styles
     error_s	42
     error_ps	42
     res         poly_resist poly_resist_stripes
-    rnd         ndiffusion  poly_resist_stripes
-    rpd         pdiffusion  nwell_field_implant
-    ppol        polysilicon  ptransistor_stripes
-    npol        polysilicon  ntransistor_stripes
+    rnd         ndiffusion poly_resist_stripes
+    rpd         pdiffusion poly_resist_stripes
+    plpdiff     polysilicon  ptransistor_stripes
+    plndiff     polysilicon  ntransistor_stripes
+    pbpoly     polysilicon  ptransistor_stripes
+    nbpoly     polysilicon  ntransistor_stripes
     silk        47
 end
 compose
@@ -695,10 +765,95 @@ compose
     compose	nffet   enfet   poly
     compose	pffet   epfet   poly
     compose	cap	poly	poly2
+
     /* Transistor combination rules */
+
+
+    /* conversion for pbase */
     paint	clc	col	clc
     paint	emc	emit	emc
+
     paint	emc	pbase	emc
+    paint	pbnd	pbase	pbnd
+    paint	pbpd	pbase	pbpd
+    paint	snfet	pbase	pbsfet
+    paint	spfet	pbase	pbsfet
+    paint	pbsfet	pbase	pbsfet
+    paint	poly	pbase	pbpoly
+    paint	pbpoly	pbase	pbpoly
+    paint	ndiff	pbase	pbnd
+    paint	pdiff	pbase	pbpd
+    paint	ndc	pbase	pbnc
+    paint	pdc	pbase	pbpc
+    paint	pbpc	pbase	pbpc
+    paint	pbnc	pbase	pbnc
+    paint	ppc	pbase	pbpc
+    paint	nnc	pbase	pbnc
+
+    paint       nbnd    pbase   nbnd
+    paint       nbpd    pbase   nbpd
+    paint       nbnc    pbase   nbnc
+    paint       nbpc    pbase   nbpc
+    paint       nbpoly  pbase   nbpoly
+
+    paint	emc	nwpbase	emc
+    paint	pbnd	nwpbase	pbnd
+    paint	pbpd	nwpbase	pbpd
+    paint	snfet	nwpbase	pbsfet
+    paint	spfet	nwpbase	pbsfet
+    paint	pbsfet	nwpbase	pbsfet
+    paint	poly	nwpbase	pbpoly
+    paint	pbpoly	nwpbase	pbpoly
+    paint	ndiff	nwpbase	pbnd
+    paint	pdiff	nwpbase	pbpd
+    paint	ndc	nwpbase	pbnc
+    paint	pdc	nwpbase	pbpc
+    paint	pbpc	nwpbase	pbpc
+    paint	pbnc	nwpbase	pbnc
+    paint	ppc	nwpbase	pbpc
+    paint	nnc	nwpbase	pbnc
+
+    paint       nbnd    nwpbase   nbnd
+    paint       nbpd    nwpbase   nbpd
+    paint       nbnc    nwpbase   nbnc
+    paint       nbpc    nwpbase   nbpc
+    paint       nbpoly  nwpbase   nbpoly
+
+    /* conversion for nbase */
+    paint	nbnd	nbase	nbnd
+    paint	nbpd	nbase	nbpd
+    paint	snfet	nbase	nbsfet
+    paint	spfet	nbase	nbsfet
+    paint	nbsfet	nbase	nbsfet
+    paint	poly	nbase	nbpoly
+    paint	nbpoly	nbase	nbpoly
+    paint	ndiff	nbase	nbnd
+    paint	pdiff	nbase	nbpd
+    paint	ndc	nbase	nbnc
+    paint	pdc	nbase	nbpc
+    paint	nbpc	nbase	nbpc
+    paint	nbnc	nbase	nbnc
+    paint	ppc	nbase	nbpc
+    paint	nnc	nbase	nbnc
+
+    /* conversion for nbase/pbase overlap */
+    paint       nwpbase nbase   nwpnbase
+    paint	nbnd	nbase	nbnd
+    paint       pbase   nbase   pnbase
+
+    paint       nwpbase   nwell   nwpbase
+    paint       pnbase    nwell   nwpnbase
+    paint       nwpnbase  nwell   nwpnbase
+
+    paint       nwell     pbase   nwpbase
+    paint       nbase     pbase   pnbase
+    paint       nwpbase   pbase   nwpbase
+
+    paint       nwpnbase   nwpbase nwpnbase
+
+    /* pbase/nbase on nwell/pwell */
+    paint       pbase   nwell   nwpbase
+
     /* Poly2 capacitor combination rules */
     paint	poly2	poly	cap
     paint	poly	poly2	cap
@@ -857,6 +1012,10 @@ cifoutput
 /*   centimicrons                                                   */
 /* SCN technology : Both CSN and CSP are generated to reduce field  */
 /*   poly sheet resistance                                          */
+
+#ifdef LIBRESILICON
+#include "cif_template/objs/LSACIFout"
+#endif /* LIBRESILICON */
 
 #ifdef STANDARD
 #include "cif_template/objs/CIFout"
@@ -1025,12 +1184,21 @@ drc
 
 /* 2.1 */
 /*  Test active width separately... */
+#ifdef LIBRESILICON
+    width allNActive 2 \
+	"N-type Diffusion width must be at least 2"
+    width allPActive 2 \
+	"P-type Diffusion width must be at least 2"
+    width allOhmic 2 \
+	"Ohmic diffusion width must be at least 2"
+#else
     width allNActive 3 \
 	"N-type Diffusion width must be at least 3 (MOSIS rule #2.1a)"
     width allPActive 3 \
 	"P-type Diffusion width must be at least 3 (MOSIS rule #2.1b)"
     width allOhmic 3 \
 	"Ohmic diffusion width must be at least 3 (MOSIS rule #2.1c)"
+#endif
 
 /* 2.2 */
     spacing allNActive allNActive 3 touching_ok \
@@ -1298,7 +1466,7 @@ drc
 	"Emitter contacts must be rectangular (Magic rules)"
     edge4way 	clc/m1	~clc/m1	1  ~clc/m1  (~clc,clc)/m1  1 \
 	"Collector contacts must be rectangular (Magic rules)"
-    edge4way 	pbc/m1	~pbc/m1	1  ~pbc/m1  (~pbc,pbc)/m1  1 \
+    edge4way 	pbpc/m1	~pbpc/m1	1  ~pbpc/m1  (~pbpc,pbpc)/m1  1 \
 	"P-base Contacts must be rectangular (Magic rules)"
     edge4way 	nbdc/m1	~nbdc/m1 1 ~nbdc/m1 (~nbdc,nbdc)/m1 1 \
 	"CCD-diffusion Contacts must be rectangular (Magic rules)"
@@ -1531,12 +1699,17 @@ drc
 /*				Metal 3				    */
 /* ---------------------------------------------------------------- */
 /* 15.1 */
+#ifdef LIBRESILICON
+    width allMetal3 4 \
+       "Third-level metal width must be at least 4"
+#else
 #ifdef SUBMICRON
     width allMetal3 5 \
        "Third-level metal width must be at least 5 (MOSIS rule #15.1b)"
 #else
     width allMetal3 6 \
        "Third-level metal width must be at least 6 (MOSIS rule #15.1a)"
+#endif
 #endif
 
 /* 15.2 */
@@ -1569,6 +1742,7 @@ drc
 /* This rule is guaranteed by the way the CIF output generates	    */
 /* N-Select for emitter (expand by 2 lambda), so we have Pbase      */
 /* overlap of emitter(or emc) by 2+2 =4				    */
+
     edge4way  emc/a,emit pbase 4  pbase pbase 4 \
 	"Pbase overlap of emitter must be at least 4 (MOSIS rule #16.3)"
 
@@ -1630,11 +1804,11 @@ drc
 /* They are not in the official SCMOS design rules since I have no  */
 /* foundry rules available at this moment and the numbers here is   */
 /* considered to be conservative...			            */
-    width pbase,pbc/a 4 \
-	"Pbase width must be at least 4 (MOSIS extension rule)"
+    width pbase,pbc/a 2 \
+	"Pbase width must be at least 2 (MOSIS extension rule)"
 
-    spacing pbase,pbc/a pbase,pbc/a 4 touching_ok \
-	"Pbase spacing must be at least 4 (MOSIS extension rule)"
+    spacing pbase,pbc/a pbase,pbc/a 2 surround_ok \
+	"Pbase spacing must be at least 2 (MOSIS extension rule)"
 
 /* ---------------------------------------------------------------- */
 /*				Capacitor Well			    */
@@ -3230,7 +3404,7 @@ plot
 	pad,glass		14	11
 	m2c			14	13
 	m2,m2c,pad		13	10
-	pdc,ndc,psc,nsc,hpdc,hndc,hpsc,hnsc,pc,ec,capc,clc,emc,pbc,nbdc,m1,m2c,gc  12  9
+	pdc,ndc,psc,nsc,hpdc,hndc,hpsc,hnsc,pc,ec,capc,clc,emc,pbnd,pbpd,pbc,nbdc,m1,m2c,gc  12  9
 	cap,cc,poly2		11	7
 	nsd,nsc			 7	1
 	psd,psc			 6	1
@@ -3243,11 +3417,22 @@ plot
 	ndiff,ndc,nffet		 9	5
 	pwell			 1	4
 	nwell			 2	4
+#ifdef LIBRESILICON
+	silk			10	5
+#endif
+
 
 /* ------------------------------------------------------------------------ */
     style pnm
 	 draw metal1
 	 draw metal2
+#ifdef LIBRESILICON
+	 draw metal3
+	 draw pwell
+	 draw nwell
+	 draw silk
+	 map silk metal2
+#endif
 	 draw polysilicon
 	 draw ndiffusion
 	 draw pdiffusion
@@ -3262,5 +3447,4 @@ plot
 	 map pdcontact pdiffusion metal1
 	 map nsubstratencontact ndiffusion metal1
 	 map psubstratepcontact pdiffusion metal1
-
 end
