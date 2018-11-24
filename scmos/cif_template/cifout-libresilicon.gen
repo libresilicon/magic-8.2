@@ -1,22 +1,23 @@
+#define cif_tech gen
 
-style lambda=0.5(libresilicon)
-	scalefactor scaleunit scaleunit
+style lambda=lambda_v(libresilicon)
+	scalefactor lambda_2 scaleunit
 
 	templayer poly_parts polysilicon,polycontact,nfet,pfet,rpoly,polypdiff,polyndiff,ndpolycontact,pdpolycontact,rpdiffusion,rndiffusion,nbsfet,pbsfet,spfet,snfet,pbpoly,nbpoly,hnfet,hpfet
 	templayer silicide_stop rpoly,rpdiffusion,rndiffusion
 	templayer nimplant ndiff,nfet,ndc,nnd,nnc,pbnc,pbnd,nbnc,nbnd,snfet,pbsfet,hnfet,hndc,hndiff
 	templayer nimplant_only rnd,plndiff,ndpc
-		grow lambda_1
+		grow lambda_2
 	templayer pimplant pdiff,pfet,pdc,ppd,ppc,pbpc,pbpd,nbpc,nbpd,spfet,nbsfet,hpfet,hpdc,hpdiff
 	templayer pimplant_only rpd,plpdiff,pdpc
-		grow lambda_1
+		grow lambda_2
 	templayer contacts pc,pdc,ndc,ppc,nnc,pbc,ndpc,pdpc,pbnc,pbpc,nbnc,nbpc,hpdc,hndc,pc,pdc,ndc,ppc,nnc,pbc,hpdc,hndc
 	templayer first_metal m1,contacts,m2c
 	templayer first_via m2c
-		shrink lambda_half
+		shrink lambda_1
 	templayer second_metal m2,m2c,m3c
 	templayer second_via m3c
-		shrink lambda_half
+		shrink lambda_1
 	templayer third_metal m3,m3c,pad,silk
 	templayer pbase_parts pb,pbnc,pbpc,pbnd,pbpd,pbpoly,pbsfet,nwpnbase,nwpbase,pnbase,pbase
 	templayer nbase_parts nb,nbnc,nbpc,nbnd,nbpd,nbpoly,nbsfet,nwpnbase,pnbase,nbase
@@ -24,21 +25,21 @@ style lambda=0.5(libresilicon)
 	templayer nwell_parts nwell,pnbase,nwpnbase,nwpbase
 	templayer pwell_parts pwell
 	templayer implant_stop_parts rpoly
-		grow lambda_1
+		grow lambda_2
 
 	templayer fox_selects nimplant,pimplant
 
 	templayer fox_nimplant nimplant
-		grow lambda_1
+		grow lambda_2
 
 	templayer fox_pimplant pimplant
-		grow lambda_1
+		grow lambda_2
 
 	templayer sti_wells nwell_parts,pwell_parts
-		shrink lambda_half
+		shrink lambda_1
 
 	templayer sti_contacts psc,nsc
-		grow lambda_half
+		grow lambda_1
 
 	layer CWN nwell_parts
 		calma 2 0
@@ -59,7 +60,7 @@ style lambda=0.5(libresilicon)
 		calma 7 0
 
 	layer CPG sonos_parts
-		grow lambda_half
+		grow lambda_1
 		calma 8 0
 
 	layer CPG poly_parts
@@ -75,11 +76,11 @@ style lambda=0.5(libresilicon)
 		calma 12 0
 
 	layer CRG silicide_stop
-		grow lambda_1
+		grow lambda_2
 		calma 13 0
 
 	layer CCA contacts
-		shrink lambda_half
+		shrink lambda_1
 		calma 14 0
 
 	layer CMF first_metal

@@ -108,7 +108,7 @@
 #ifdef LSA // Libre Silicon
 
 /* Lanceville LibreSilicon 1.0 micron technology */
-#define lambda_value 100
+#define lambda_value 50
 #include "calc.lambda"
 #include "cifout-libresilicon.gen"
 
