@@ -1,7 +1,7 @@
 #define cif_tech gen
 
 style lambda=lambda_v(libresilicon)
-	scalefactor lambda_2 scaleunit
+	scalefactor lambda_1 scaleunit
 
 	templayer poly_parts polysilicon,polycontact,nfet,pfet,rpoly,polypdiff,polyndiff,ndpolycontact,pdpolycontact,rpdiffusion,rndiffusion,nbsfet,pbsfet,spfet,snfet,pbpoly,nbpoly,hnfet,hpfet
 	templayer silicide_stop rpoly,rpdiffusion,rndiffusion
