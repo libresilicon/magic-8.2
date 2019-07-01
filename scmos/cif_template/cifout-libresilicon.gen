@@ -3,27 +3,49 @@
 style lambda=lambda_v(libresilicon)
 	scalefactor lambda_1 scaleunit
 
-	templayer poly_parts polysilicon,polycontact,nfet,pfet,rpoly,polypdiff,polyndiff,ndpolycontact,pdpolycontact,rpdiffusion,rndiffusion,nbsfet,pbsfet,spfet,snfet,pbpoly,nbpoly,hnfet,hpfet
-	templayer silicide_stop rpoly,rpdiffusion,rndiffusion
-	templayer nimplant ndiff,nfet,ndc,nnd,nnc,pbnc,pbnd,nbnc,nbnd,snfet,pbsfet,hnfet,hndc,hndiff
+	templayer poly_parts polysilicon,polycontact,nfet,pfet,rpoly,polypdiff,polyndiff,ndpolycontact,pdpolycontact,nbsfet,pbsfet,spfet,snfet,pbpoly,nbpoly,hnfet,hpfet,rnfet,rpfet
+
+	templayer silicide_stop rpoly,rnfet,rpfet
+
+	templayer silicide_stop_unscaled rpdiffusion,rndiffusion
+
+	templayer silicide_stop_scaled silicide_stop
+		grow lambda_2
+
+	templayer nimplant ndiff,nfet,ndc,nnd,nnc,pbnc,pbnd,nbnc,nbnd,snfet,pbsfet,hnfet,hndc,hndiff,rndiff,rpdiff,rpfet,rnfet
+
 	templayer nimplant_only rnd,plndiff,ndpc
 		grow lambda_2
+
 	templayer pimplant pdiff,pfet,pdc,ppd,ppc,pbpc,pbpd,nbpc,nbpd,spfet,nbsfet,hpfet,hpdc,hpdiff
+
 	templayer pimplant_only rpd,plpdiff,pdpc
 		grow lambda_2
+
 	templayer contacts pc,pdc,ndc,ppc,nnc,pbc,ndpc,pdpc,pbnc,pbpc,nbnc,nbpc,hpdc,hndc,pc,pdc,ndc,ppc,nnc,pbc,hpdc,hndc
+
 	templayer first_metal m1,contacts,m2c
+
 	templayer first_via m2c
 		shrink lambda_1
+
 	templayer second_metal m2,m2c,m3c
+
 	templayer second_via m3c
 		shrink lambda_1
+
 	templayer third_metal m3,m3c,pad,silk
+
 	templayer pbase_parts pb,pbnc,pbpc,pbnd,pbpd,pbpoly,pbsfet,nwpnbase,nwpbase,pnbase,pbase
+
 	templayer nbase_parts nb,nbnc,nbpc,nbnd,nbpd,nbpoly,nbsfet,nwpnbase,pnbase,nbase
+
 	templayer sonos_parts snfet,spfet,nbsfet,pbsfet
+
 	templayer nwell_parts nwell,pnbase,nwpnbase,nwpbase
+
 	templayer pwell_parts pwell
+
 	templayer implant_stop_parts rpoly
 		grow lambda_2
 
@@ -75,8 +97,7 @@ style lambda=lambda_v(libresilicon)
 	layer CSP fox_pimplant,pimplant_only
 		calma 12 0
 
-	layer CRG silicide_stop
-		grow lambda_2
+	layer CRG silicide_stop_scaled,silicide_stop_unscaled 
 		calma 13 0
 
 	layer CCA contacts
@@ -100,14 +121,6 @@ style lambda=lambda_v(libresilicon)
 
 	layer COG glass
 		calma 20 0
-
-	/*
-	layer CG
-		labels space
-		labels psubstratepcontact
-		labels metal2
-		calma 16 1
-	*/
 
 #undef cif_tech
 

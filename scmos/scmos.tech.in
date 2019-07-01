@@ -432,6 +432,9 @@ types
     active	doubleptransistor,pfloating-gate,pfloatg,pfg,pffet
     active	highvoltntransistor,hvnfet,hnfet
     active	highvoltptransistor,hvpfet,hpfet
+    active	rntransistor,rnfet // poly gate without silicide
+    active	rptransistor,rpfet // poly gate without silicide
+
 
     /* NPN transistor layers -3 */
 
@@ -586,14 +589,20 @@ styles
     pdop	4
     pdop	38
     /* transistors */
+    rnfet	6
+    rpfet	6
     snfet	6
     spfet	6
     nbsfet	6
     pbsfet	6
     nfet	6
     nfet	7
+    rnfet	6
+    rnfet	7
     pfet	8
     pfet	9
+    rpfet	8
+    rpfet	9
 
     enfet	6
     enfet	30
@@ -742,12 +751,17 @@ styles
     error_s	42
     error_ps	42
     res         poly_resist poly_resist_stripes
-    rnd         ndiffusion poly_resist_stripes
-    rpd         pdiffusion poly_resist_stripes
+
+    rnd         ntransistor_stripes
+    rpd         ptransistor_stripes
+
+    rnfet       polysilicon  poly_resist_stripes
+    rpfet       polysilicon  ptransistor_stripes
+
     plpdiff     polysilicon  ptransistor_stripes
     plndiff     polysilicon  ntransistor_stripes
-    pbpoly     polysilicon  ptransistor_stripes
-    nbpoly     polysilicon  ntransistor_stripes
+    pbpoly      polysilicon  ptransistor_stripes
+    nbpoly      polysilicon  ntransistor_stripes
     silk        47
 end
 compose
