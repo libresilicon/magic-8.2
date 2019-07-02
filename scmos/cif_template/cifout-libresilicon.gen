@@ -5,11 +5,7 @@ style lambda=lambda_v(libresilicon)
 
 	templayer poly_parts polysilicon,polycontact,nfet,pfet,rpoly,polypdiff,polyndiff,ndpolycontact,pdpolycontact,nbsfet,pbsfet,spfet,snfet,pbpoly,nbpoly,hnfet,hpfet,rnfet,rpfet
 
-	templayer silicide_stop rpoly,rnfet,rpfet
-
-	templayer silicide_stop_unscaled rpdiffusion,rndiffusion
-
-	templayer silicide_stop_scaled silicide_stop
+	templayer silicide_stop rpoly,rnfet,rpfet,rpdiffusion,rndiffusion
 		grow lambda_2
 
 	templayer nimplant ndiff,nfet,ndc,nnd,nnc,pbnc,pbnd,nbnc,nbnd,snfet,pbsfet,hnfet,hndc,hndiff,rndiff,rpdiff,rpfet,rnfet
@@ -97,7 +93,7 @@ style lambda=lambda_v(libresilicon)
 	layer CSP fox_pimplant,pimplant_only
 		calma 12 0
 
-	layer CRG silicide_stop_scaled,silicide_stop_unscaled 
+	layer CRG silicide_stop
 		calma 13 0
 
 	layer CCA contacts
