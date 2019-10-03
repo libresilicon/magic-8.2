@@ -94,4 +94,8 @@ THERE_IS_AN_ERROR_SOME_LOCAL_CAPACITANCE_DEFINITIONS_HAVE_ALREADY_BEEN_DEFINED
 #include "scmosExt14b-sub.tech.in"
 #endif
 
+#if defined(LIBRESILICON)
+#include "LibreSiliconExt1um.tech.in"
+#endif
+
 #include "scmosExtDiag.tech.in"

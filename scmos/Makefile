@@ -48,7 +48,8 @@ DEPEND = scmos.tech.in \
 		extract_template/scmosExt34.tech.in \
 		extract_template/scmosExt14b-sub.tech.in \
 		extract_template/scmosExtDiag.tech.in \
-		extract_template/scmosExt14b-tm.tech.in 
+		extract_template/scmosExt14b-tm.tech.in \
+		extract_template/LibreSiliconExt1um.tech.in
 
 all: $(OBJS) $(DEPEND) ${TECHFILES}
 
