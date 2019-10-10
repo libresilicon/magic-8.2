@@ -1092,6 +1092,10 @@ end
  * ---------------------------------------------------------------------*/
 cifinput
 
+#ifdef LIBRESILICON
+#include "cif_template/objs/CIFin"
+#endif /* LIBRESILICON */
+
 #ifdef STANDARD
 #include "cif_template/objs/CIFin"
 #endif /* STANDARD */
